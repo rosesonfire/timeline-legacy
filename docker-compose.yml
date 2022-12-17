@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  # front-end:
+  #   image: node
+  #   depends_on:
+  #     - back-end
+  #   volumes:
+  #     - ./front-end:/usr/src/app
+  #   networks:
+  #     - front-tier
+  #   working_dir: /usr/src/app
+  #   command: yarn start:docker
+  #   ports:
+  #     - "19000:19000"
+
+  back-end:
+    image: node
+    depends_on:
+      - db
+    volumes:
+      - ./db:/etc/data
+      - ./back-end:/usr/src/app
+    networks:
+      - back-tier
+    working_dir: /usr/src/app
+    command: yarn start
+    ports:
+      - 8080:8080
+
+  db:
+    image: mysql
+    volumes:
+      - ./db:/etc/data
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=timeline
+    networks:
+      - back-tier
+    ports:
+      - 3306:3306
+
+networks:
+  # The presence of these objects is sufficient to define them
+  front-tier: {}
+  back-tier: {}
