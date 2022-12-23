@@ -17,19 +17,26 @@ services:
   back-end:
     image: node
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - ./db:/etc/data
       - ./back-end:/usr/src/app
     networks:
       - back-tier
     working_dir: /usr/src/app
-    command: yarn start
+    command: yarn start:docker
     ports:
       - 8080:8080
 
   db:
     image: mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+      interval: 5s
+      start_period: 10s
     volumes:
       - ./db:/etc/data
     environment:
