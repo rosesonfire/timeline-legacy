@@ -1,4 +1,8 @@
-import server from './server';
+import { entityService } from 'ioc';
+
+import Server from './Server';
+
+const server = new Server(entityService).createNewServer();
 
 server.listen({ host: '0.0.0.0', port: 8080 }, (err, address) => {
   if (err) {
