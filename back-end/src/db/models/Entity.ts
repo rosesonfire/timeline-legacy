@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { Table, Column, Model } from 'sequelize-typescript';
 import { List, Record, RecordOf } from 'immutable';
 
@@ -32,8 +33,14 @@ export class EntityRepository implements Repository<EntityDomainModel> {
   }
 
   async filter(entityDM: RecordOf<Partial<EntityDomainModel>>) {
+    const { name } = entityDM.toJSON();
+
     const entities = await Entity.findAll({
-      where: entityDM.toJSON(),
+      where: {
+        name: {
+          [Op.like]: name ? `%${name}%` : '%',
+        },
+      },
     });
 
     return List(entities.map(EntityRepository.mapToDomainModel));

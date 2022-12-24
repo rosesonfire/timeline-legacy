@@ -10,7 +10,7 @@ abstract class DomainModelService<DM extends {}> {
   }
 
   create(domainModel: RecordOf<DM>) {
-    this._db.create(domainModel);
+    return this._db.create(domainModel);
   }
 
   filter(domainModel: RecordOf<Partial<DM>>) {

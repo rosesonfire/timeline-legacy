@@ -5,4 +5,5 @@ import EntityService from 'services/EntityService';
 
 db.authenticate();
 
-export const entityService = new EntityService(new EntityRepository());
+export const entityRepository = new EntityRepository();
+export const entityService = new EntityService(entityRepository);
