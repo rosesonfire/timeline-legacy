@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Constants from 'expo-constants';
-import axios from 'axios';
 import {
   Text,
   Link,
@@ -15,7 +13,10 @@ import {
   VStack,
   Box,
 } from 'native-base';
-import NativeBaseIcon from './components/NativeBaseIcon';
+
+import { createEntity, getEntities } from 'api/entity';
+
+import NativeBaseIcon from 'components/NativeBaseIcon';
 
 // Define the config
 const config = {
@@ -30,13 +31,15 @@ declare module 'native-base' {
   interface ICustomTheme extends MyThemeType {}
 }
 
-const host: string | null = Constants.expoConfig?.extra?.apiUrl;
-
 export default function App() {
   const [response, setResponse] = useState('');
 
   useEffect(() => {
-    axios(`http://${host}:8080/ping`)
+    createEntity({
+      name: 'some name',
+    });
+
+    getEntities()
       .then((res) => {
         setResponse(JSON.stringify(res.data));
       })
