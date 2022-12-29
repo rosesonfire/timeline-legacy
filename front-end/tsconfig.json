@@ -3,5 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": "src",
+    "paths": {
+      "@common/*": [
+        "src/common/"
+      ]
+    }
   }
 }

@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App should match snapshot 1`] = `
+<NativeBaseProvider3>
+  <ScrollView>
+    <Center
+      _dark={
+        {
+          "bg": "blueGray.900",
+        }
+      }
+      _light={
+        {
+          "bg": "blueGray.50",
+        }
+      }
+      flex={1}
+      px={4}
+    >
+      <VStack
+        alignItems="center"
+        space={5}
+      >
+        <NativeBaseIcon />
+        <Heading
+          size="lg"
+        >
+          Welcome to NativeBase
+        </Heading>
+        <Heading
+          size="md"
+        />
+        <HStack
+          alignItems="center"
+          space={2}
+        >
+          <Text>
+            Edit
+          </Text>
+          <Box
+            _dark={
+              {
+                "bg": "blueGray.800",
+              }
+            }
+            _light={
+              {
+                "bg": "blueGray.200",
+              }
+            }
+            _web={
+              {
+                "_text": {
+                  "fontFamily": "monospace",
+                  "fontSize": "sm",
+                },
+              }
+            }
+            px={2}
+            py={1}
+          >
+            App.js
+          </Box>
+          <Text>
+            and save to reload.
+          </Text>
+        </HStack>
+        <Link
+          href="https://docs.nativebase.io"
+          isExternal={true}
+        >
+          <Text
+            color="primary.500"
+            fontSize="xl"
+            underline={true}
+          >
+            Learn NativeBase
+          </Text>
+        </Link>
+        <HStack
+          alignItems="center"
+          space={2}
+        >
+          <Text>
+            Dark
+          </Text>
+          <Switch
+            aria-label="switch to dark mode"
+            isChecked={true}
+            onToggle={[MockFunction]}
+          />
+          <Text>
+            Light
+          </Text>
+        </HStack>
+      </VStack>
+    </Center>
+  </ScrollView>
+</NativeBaseProvider3>
+`;
