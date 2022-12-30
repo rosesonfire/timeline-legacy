@@ -3,7 +3,7 @@ import { RecordOf } from 'immutable';
 import { Repository } from 'domainModels/types';
 
 abstract class DomainModelService<DM extends {}> {
-  _db!: Repository<DM>;
+  private _db!: Repository<DM>;
 
   constructor(db: Repository<DM>) {
     this._db = db;

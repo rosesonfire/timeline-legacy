@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Text,
   Link,
@@ -6,17 +6,16 @@ import {
   Center,
   ScrollView,
   Heading,
-  Switch,
-  useColorMode,
   NativeBaseProvider,
   extendTheme,
   VStack,
   Box,
 } from 'native-base';
 
-import { createEntity, getEntities } from 'api/entity';
-
 import NativeBaseIcon from 'components/NativeBaseIcon';
+import ToggleDarkMode from 'components/ToggleDarkMode';
+
+import { useEntities } from './hooks';
 
 // Define the config
 const config = {
@@ -32,21 +31,7 @@ declare module 'native-base' {
 }
 
 export default function App() {
-  const [response, setResponse] = useState('');
-
-  useEffect(() => {
-    createEntity({
-      name: 'some name',
-    });
-
-    getEntities()
-      .then((res) => {
-        setResponse(JSON.stringify(res.data));
-      })
-      .catch((error) => {
-        setResponse(JSON.stringify(error, null, 2));
-      });
-  }, []);
+  const { response } = useEntities();
 
   return (
     <NativeBaseProvider>
@@ -84,21 +69,5 @@ export default function App() {
         </Center>
       </ScrollView>
     </NativeBaseProvider>
-  );
-}
-
-// Color Switch Component
-function ToggleDarkMode() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  return (
-    <HStack space={2} alignItems="center">
-      <Text>Dark</Text>
-      <Switch
-        isChecked={colorMode === 'light'}
-        onToggle={toggleColorMode}
-        aria-label={colorMode === 'light' ? 'switch to dark mode' : 'switch to light mode'}
-      />
-      <Text>Light</Text>
-    </HStack>
   );
 }

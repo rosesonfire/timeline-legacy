@@ -1,0 +1,1 @@
+import './nativeBase.mock.test';

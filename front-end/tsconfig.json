@@ -8,5 +8,8 @@
         "src/common/"
       ]
     }
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

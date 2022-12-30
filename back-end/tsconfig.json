@@ -6,7 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
-    "types": ["reflect-metadata"],
+    "types": [
+      "reflect-metadata",
+      "jest"
+    ],
     "allowJs": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -25,8 +28,13 @@
     "baseUrl": "src",
     "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
+    "paths": {
+      "@common/*": [
+        "src/common/"
+      ]
+    }
   },
   "include": [
     "src"
-  ],
+  ]
 }

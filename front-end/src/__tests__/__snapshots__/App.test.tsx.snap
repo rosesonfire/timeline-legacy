@@ -29,7 +29,9 @@ exports[`App should match snapshot 1`] = `
         </Heading>
         <Heading
           size="md"
-        />
+        >
+          response
+        </Heading>
         <HStack
           alignItems="center"
           space={2}
@@ -77,22 +79,7 @@ exports[`App should match snapshot 1`] = `
             Learn NativeBase
           </Text>
         </Link>
-        <HStack
-          alignItems="center"
-          space={2}
-        >
-          <Text>
-            Dark
-          </Text>
-          <Switch
-            aria-label="switch to dark mode"
-            isChecked={true}
-            onToggle={[MockFunction]}
-          />
-          <Text>
-            Light
-          </Text>
-        </HStack>
+        <ToggleDarkMode />
       </VStack>
     </Center>
   </ScrollView>
