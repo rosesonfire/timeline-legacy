@@ -11,9 +11,20 @@ class Server {
   constructor(entityService: EntityService) {
     this._server = fastify();
 
+    this.setMiddlewares();
+
     const entityController = new EntityController(entityService);
 
     this._registerRoutes('/entity', entityController);
+  }
+
+  setMiddlewares() {
+    this._server.addHook<{ toJSON?: Function }>(
+      'preSerialization',
+      (request, reply, payload, done) => {
+        done(null, payload?.toJSON?.());
+      },
+    );
   }
 
   listen({ host, port }: { host: string; port: number }) {

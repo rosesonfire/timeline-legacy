@@ -1,6 +1,12 @@
-import { List, RecordOf } from 'immutable';
+import { RecordOf } from 'immutable';
 
-export abstract class Repository<DM extends {}> {
-  abstract create(domainModel: RecordOf<DM>): Promise<RecordOf<DM>>;
-  abstract filter(domainModel: RecordOf<Partial<DM>>): Promise<List<RecordOf<DM>>>;
+export interface DM {
+  id: number;
+}
+
+export interface IRepository<T extends DM> {
+  find(id: T['id']): Promise<RecordOf<T> | null>;
+  create(domainModel: RecordOf<T>): Promise<RecordOf<T>>;
+  update(id: T['id'], domainModel: RecordOf<Partial<T>>): Promise<RecordOf<T> | null>;
+  delete(id: T['id']): Promise<RecordOf<T> | null>;
 }

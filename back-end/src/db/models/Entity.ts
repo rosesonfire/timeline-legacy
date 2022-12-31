@@ -1,35 +1,29 @@
 import { Op } from 'sequelize';
-import { Table, Column, Model } from 'sequelize-typescript';
+import { Column, Model } from 'sequelize-typescript';
 import { List, Record, RecordOf } from 'immutable';
 
-import EntityDomainModel from 'domainModels/Entity';
-import { Repository } from 'domainModels/types';
+import Repository from 'db/_shared/Repository';
+import TMTable from 'db/_shared/TMTable';
 
-@Table({
+import EntityDomainModel, { IEntityRepository } from 'domainModels/Entity';
+import { DBModelFields } from 'db/_shared/types';
+
+type EntityFields = DBModelFields<Pick<Entity, 'name'>>;
+
+@TMTable({
   modelName: 'entity',
-  paranoid: true,
-  underscored: true,
-  freezeTableName: true,
 })
-export class Entity extends Model<Pick<Entity, 'name'>> {
+export class Entity extends Model<EntityFields> {
   @Column
   name!: string;
 }
 
-export class EntityRepository implements Repository<EntityDomainModel> {
-  private static mapToDomainModel(entity: Entity) {
-    const newEntityDM = Record<EntityDomainModel>({
-      name: entity.name,
-    })();
-
-    return newEntityDM;
-  }
-
-  async create(entityDM: RecordOf<EntityDomainModel>) {
-    const entity = await new Entity(entityDM.toJSON()).save();
-    const newEntityDM = EntityRepository.mapToDomainModel(entity);
-
-    return newEntityDM;
+export class EntityRepository
+  extends Repository<EntityDomainModel, EntityFields>
+  implements IEntityRepository
+{
+  constructor() {
+    super(Entity);
   }
 
   async filter(entityDM: RecordOf<Partial<EntityDomainModel>>) {
@@ -43,6 +37,23 @@ export class EntityRepository implements Repository<EntityDomainModel> {
       },
     });
 
-    return List(entities.map(EntityRepository.mapToDomainModel));
+    return List(entities.map(this.mapDBModelToDomainModel));
+  }
+
+  protected mapDomainModelToDBModel(entityDM: RecordOf<EntityDomainModel>) {
+    const createdDBObject = new Entity({ ...entityDM.toJSON() });
+
+    return createdDBObject;
+  }
+
+  protected mapDomainModelToDBModelFields(entityDM: RecordOf<Partial<EntityDomainModel>>) {
+    return entityDM;
+  }
+
+  protected mapDBModelToDomainModel(entityDBObject: Entity) {
+    const dbModelFields = entityDBObject.toJSON();
+    const newEntityDM = Record<EntityDomainModel>(dbModelFields)();
+
+    return newEntityDM;
   }
 }

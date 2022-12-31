@@ -10,12 +10,14 @@ jest.mock('sequelize-typescript', () => ({
   Table: jest.fn(() =>
     jest.fn((target, propertyName: string, propertyDescriptor?: PropertyDescriptor) => {
       if (propertyDescriptor) {
+        // @ts-ignore
         propertyDescriptor.kind = 'method';
       }
     }),
   ),
   Column: jest.fn((target, propertyName: string, propertyDescriptor?: PropertyDescriptor) => {
     if (propertyDescriptor) {
+      // @ts-ignore
       propertyDescriptor.kind = 'field';
     }
   }),

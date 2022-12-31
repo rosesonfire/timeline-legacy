@@ -1,20 +1,28 @@
 import { RecordOf } from 'immutable';
 
-import { Repository } from 'domainModels/types';
+import { DM, IRepository } from 'domainModels/types';
 
-abstract class DomainModelService<DM extends {}> {
-  private _db!: Repository<DM>;
+abstract class DomainModelService<T extends DM, R extends IRepository<T>> {
+  protected _db!: R;
 
-  constructor(db: Repository<DM>) {
+  constructor(db: R) {
     this._db = db;
   }
 
-  create(domainModel: RecordOf<DM>) {
+  create(domainModel: RecordOf<T>): Promise<RecordOf<T>> {
     return this._db.create(domainModel);
   }
 
-  filter(domainModel: RecordOf<Partial<DM>>) {
-    return this._db.filter(domainModel);
+  find(id: T['id']): Promise<RecordOf<T> | null> {
+    return this._db.find(id);
+  }
+
+  update(id: T['id'], domainModel: RecordOf<Partial<T>>): Promise<RecordOf<T> | null> {
+    return this._db.update(id, domainModel);
+  }
+
+  delete(id: T['id']): Promise<RecordOf<T> | null> {
+    return this._db.delete(id);
   }
 }
 
