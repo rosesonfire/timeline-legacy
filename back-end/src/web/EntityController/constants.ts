@@ -1,28 +1,22 @@
-import { Schema } from './types';
+import { ID, ID_SCHEMA, NAME, NAME_SCHEMA, NULL_SCHEMA } from 'web/_shared/constants';
+
+import { Schema } from 'web/_shared/types';
 
 const SCHEMA__ENTITY__RESPONSE = {
   type: 'object',
   properties: {
-    id: {
-      type: 'number',
-    },
-    name: {
-      type: 'string',
-    },
+    ...ID_SCHEMA,
+    ...NAME_SCHEMA,
   },
-  required: ['id', 'name'],
+  required: [ID, NAME],
   additionalProperties: false,
 };
 
 export const SCHEMA__ENTITY__POST: Schema = {
   body: {
     type: 'object',
-    properties: {
-      name: {
-        type: 'string',
-      },
-    },
-    required: ['name'],
+    properties: NAME_SCHEMA,
+    required: [NAME],
     additionalProperties: false,
   },
   response: {
@@ -33,11 +27,7 @@ export const SCHEMA__ENTITY__POST: Schema = {
 export const SCHEMA__ENTITY__PATCH: Schema = {
   body: {
     type: 'object',
-    properties: {
-      name: {
-        type: 'string',
-      },
-    },
+    properties: NAME_SCHEMA,
     additionalProperties: false,
   },
   response: {
@@ -53,18 +43,14 @@ export const SCHEMA__ENTITY__GET: Schema = {
 
 export const SCHEMA__ENTITY__DELETE: Schema = {
   response: {
-    200: {
-      type: 'null',
-    },
+    200: NULL_SCHEMA,
   },
 };
 
 export const SCHEMA__ENTITY__SEARCH: Schema = {
   querystring: {
     type: 'object',
-    properties: {
-      name: { type: 'string' },
-    },
+    properties: NAME_SCHEMA,
     additionalProperties: false,
   },
   response: {

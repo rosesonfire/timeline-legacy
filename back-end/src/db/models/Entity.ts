@@ -6,22 +6,16 @@ import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
 
 import EntityDomainModel, { IEntityRepository } from 'domainModels/Entity';
-import { DBModelFields } from 'db/_shared/types';
-
-type EntityFields = DBModelFields<Pick<Entity, 'name'>>;
 
 @TMTable({
   modelName: 'entity',
 })
-export class Entity extends Model<EntityFields> {
+export class Entity extends Model<EntityDomainModel> {
   @Column
   name!: string;
 }
 
-export class EntityRepository
-  extends Repository<EntityDomainModel, EntityFields>
-  implements IEntityRepository
-{
+export class EntityRepository extends Repository<EntityDomainModel> implements IEntityRepository {
   constructor() {
     super(Entity);
   }

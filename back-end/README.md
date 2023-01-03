@@ -8,8 +8,8 @@
   - ioc
 - services
   - ioc
-  - server
-- server
+  - web
+- web
   - index.ts
 - ioc
   - index.ts

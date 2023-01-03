@@ -2,8 +2,8 @@ import { Record } from 'immutable';
 import { FastifyInstance } from 'fastify';
 
 import EntityService from 'services/EntityService';
+import Controller from 'web/_shared/Controller';
 
-import Controller from './Controller';
 import {
   SCHEMA__ENTITY__SEARCH,
   SCHEMA__ENTITY__POST,

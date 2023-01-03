@@ -1,22 +1,18 @@
-import { RecordOf } from 'immutable';
+import { List, RecordOf } from 'immutable';
 
 import { DM, IRepository } from 'domainModels/types';
 
 import TMModel from './TMModel';
 
-/**
- * @T Domain model type
- * @F Database Model fields
- */
-abstract class Repository<T extends DM, F extends {}> implements IRepository<T> {
-  protected _DBModelClass: typeof TMModel;
+abstract class Repository<T extends DM> implements IRepository<T> {
+  private __DBModelClass: typeof TMModel;
 
   constructor(DBModelClass: typeof TMModel) {
-    this._DBModelClass = DBModelClass;
+    this.__DBModelClass = DBModelClass;
   }
 
   protected _findDBObject(id: T['id']) {
-    const dbObject = this._DBModelClass.findByPk(id);
+    const dbObject = this.__DBModelClass.findByPk(id);
 
     return dbObject;
   }
@@ -65,10 +61,12 @@ abstract class Repository<T extends DM, F extends {}> implements IRepository<T> 
     return deletedDomainModel;
   }
 
+  abstract filter(domainModel: RecordOf<Partial<T>>): Promise<List<RecordOf<T>>>;
+
   protected abstract mapDomainModelToDBModel(domainModel: RecordOf<T>): TMModel;
   protected abstract mapDomainModelToDBModelFields(
     domainModel: RecordOf<Partial<T>>,
-  ): RecordOf<Partial<F>>;
+  ): RecordOf<Partial<T>>;
   protected abstract mapDBModelToDomainModel(dbObject: TMModel): RecordOf<T>;
 }
 

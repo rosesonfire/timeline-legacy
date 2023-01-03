@@ -1,13 +1,7 @@
-import { List, RecordOf } from 'immutable';
-
 import { DM, IRepository } from './types';
 
-interface Entity extends DM {
-  name: string;
-}
+interface Entity extends DM {}
 
-export interface IEntityRepository extends IRepository<Entity> {
-  filter(entityDM: RecordOf<Partial<Entity>>): Promise<List<RecordOf<Entity>>>;
-}
+export interface IEntityRepository<T extends Entity = Entity> extends IRepository<T> {}
 
 export default Entity;
