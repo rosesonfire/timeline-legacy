@@ -1,21 +1,17 @@
 import React from 'react';
 import {
-  Text,
-  Link,
-  HStack,
   Center,
-  ScrollView,
-  Heading,
   NativeBaseProvider,
   extendTheme,
   VStack,
-  Box,
+  Fab,
+  FlatList,
+  Spinner,
+  Icon,
 } from 'native-base';
+import { Feather } from '@expo/vector-icons';
 
-import NativeBaseIcon from 'components/NativeBaseIcon';
-import ToggleDarkMode from 'components/ToggleDarkMode';
-
-import { useEntities } from './hooks';
+import { useEntities, useRenderEntity } from './hooks';
 
 // Define the config
 const config = {
@@ -31,43 +27,47 @@ declare module 'native-base' {
 }
 
 export default function App() {
-  const { response } = useEntities();
+  const { entities, addNewEntity, getMoreEntities, isFetching, removeAllEntities } = useEntities();
+  const renderEntity = useRenderEntity();
 
   return (
     <NativeBaseProvider>
-      <ScrollView>
-        <Center _dark={{ bg: 'blueGray.900' }} _light={{ bg: 'blueGray.50' }} px={4} flex={1}>
-          <VStack space={5} alignItems="center">
-            <NativeBaseIcon />
-            <Heading size="lg">Welcome to NativeBase</Heading>
-            <Heading size="md">{response}</Heading>
-            <HStack space={2} alignItems="center">
-              <Text>Edit</Text>
-              <Box
-                _web={{
-                  _text: {
-                    fontFamily: 'monospace',
-                    fontSize: 'sm',
-                  },
-                }}
-                px={2}
-                py={1}
-                _dark={{ bg: 'blueGray.800' }}
-                _light={{ bg: 'blueGray.200' }}
-              >
-                App.js
-              </Box>
-              <Text>and save to reload.</Text>
-            </HStack>
-            <Link href="https://docs.nativebase.io" isExternal>
-              <Text color="primary.500" underline fontSize={'xl'}>
-                Learn NativeBase
-              </Text>
-            </Link>
-            <ToggleDarkMode />
-          </VStack>
-        </Center>
-      </ScrollView>
+      <Center
+        _dark={{ bg: 'blueGray.900' }}
+        _light={{ bg: 'blueGray.50' }}
+        px={4}
+        flex={1}
+        safeArea
+      >
+        <VStack space={5} alignItems="center">
+          <Fab
+            renderInPortal={false}
+            size="sm"
+            onPress={removeAllEntities}
+            color="red"
+            style={{
+              backgroundColor: 'red',
+            }}
+            icon={<Icon as={Feather} name="minus" />}
+          />
+
+          <FlatList
+            data={entities}
+            renderItem={renderEntity}
+            onEndReachedThreshold={0.2}
+            onEndReached={getMoreEntities}
+          ></FlatList>
+
+          {isFetching && <Spinner />}
+        </VStack>
+
+        <Fab
+          renderInPortal={true}
+          size="sm"
+          onPress={addNewEntity}
+          icon={<Icon as={Feather} name="plus" />}
+        />
+      </Center>
     </NativeBaseProvider>
   );
 }

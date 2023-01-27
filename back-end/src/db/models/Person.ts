@@ -6,6 +6,7 @@ import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
 
 import PersonDomainModel, { Gender, IPersonRepository } from 'domainModels/Person';
+import { Pagination } from 'domainModels/types';
 
 @TMTable({
   modelName: 'person',
@@ -23,7 +24,7 @@ export class PersonRepository extends Repository<PersonDomainModel> implements I
     super(Person);
   }
 
-  async filter(personDM: RecordOf<Partial<PersonDomainModel>>) {
+  async filter(personDM: RecordOf<Partial<PersonDomainModel>>, pagination?: RecordOf<Pagination>) {
     const { name } = personDM.toJSON();
 
     const persons = await Person.findAll({
@@ -32,6 +33,8 @@ export class PersonRepository extends Repository<PersonDomainModel> implements I
           [Op.like]: name ? `%${name}%` : '%',
         },
       },
+      offset: pagination?.offset,
+      limit: pagination?.pageSize,
     });
 
     return List(persons.map(this.mapDBModelToDomainModel));

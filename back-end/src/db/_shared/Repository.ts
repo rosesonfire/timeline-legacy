@@ -1,6 +1,6 @@
 import { List, RecordOf } from 'immutable';
 
-import { DM, IRepository } from 'domainModels/types';
+import { DM, IRepository, Pagination } from 'domainModels/types';
 
 import TMModel from './TMModel';
 
@@ -61,7 +61,10 @@ abstract class Repository<T extends DM> implements IRepository<T> {
     return deletedDomainModel;
   }
 
-  abstract filter(domainModel: RecordOf<Partial<T>>): Promise<List<RecordOf<T>>>;
+  abstract filter(
+    domainModel: RecordOf<Partial<T>>,
+    pagination?: RecordOf<Pagination>,
+  ): Promise<List<RecordOf<T>>>;
 
   protected abstract mapDomainModelToDBModel(domainModel: RecordOf<T>): TMModel;
   protected abstract mapDomainModelToDBModelFields(

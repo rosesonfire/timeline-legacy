@@ -28,10 +28,12 @@ class EntityController extends Controller {
       (request) => this._entityService.create(Record(request.body)()),
     );
 
-    server.get('/', { schema: SCHEMA__ENTITY__SEARCH }, (request) =>
+    server.get('/', { schema: SCHEMA__ENTITY__SEARCH }, (request) => {
+      const { pagination, rest } = this.extractPaginationFromQueryParams(request);
+
       //@ts-ignore
-      this._entityService.filter(Record(request.query)()),
-    );
+      return this._entityService.filter(Record(rest)(), Record(pagination)());
+    });
 
     server.get('/:id', { schema: SCHEMA__ENTITY__GET }, async (request, reply) => {
       //@ts-ignore
@@ -54,6 +56,10 @@ class EntityController extends Controller {
 
       reply.code(404);
     });
+
+    server.delete('', { schema: SCHEMA__ENTITY__DELETE }, (request, reply) =>
+      this._entityService.deleteAll(),
+    );
 
     server.delete('/:id', { schema: SCHEMA__ENTITY__DELETE }, async (request, reply) => {
       //@ts-ignore

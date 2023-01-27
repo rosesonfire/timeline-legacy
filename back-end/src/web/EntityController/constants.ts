@@ -1,4 +1,11 @@
-import { ID, ID_SCHEMA, NAME, NAME_SCHEMA, NULL_SCHEMA } from 'web/_shared/constants';
+import {
+  ID,
+  ID_SCHEMA,
+  NAME,
+  NAME_SCHEMA,
+  NULL_SCHEMA,
+  PAGINATION_SCHEMA,
+} from 'web/_shared/constants';
 
 import { Schema } from 'web/_shared/types';
 
@@ -50,7 +57,10 @@ export const SCHEMA__ENTITY__DELETE: Schema = {
 export const SCHEMA__ENTITY__SEARCH: Schema = {
   querystring: {
     type: 'object',
-    properties: NAME_SCHEMA,
+    properties: {
+      ...NAME_SCHEMA,
+      ...PAGINATION_SCHEMA,
+    },
     additionalProperties: false,
   },
   response: {

@@ -6,6 +6,7 @@ import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
 
 import EntityDomainModel, { IEntityRepository } from 'domainModels/Entity';
+import { Pagination } from 'domainModels/types';
 
 @TMTable({
   modelName: 'entity',
@@ -20,7 +21,7 @@ export class EntityRepository extends Repository<EntityDomainModel> implements I
     super(Entity);
   }
 
-  async filter(entityDM: RecordOf<Partial<EntityDomainModel>>) {
+  async filter(entityDM: RecordOf<Partial<EntityDomainModel>>, pagination?: RecordOf<Pagination>) {
     const { name } = entityDM.toJSON();
 
     const entities = await Entity.findAll({
@@ -29,6 +30,8 @@ export class EntityRepository extends Repository<EntityDomainModel> implements I
           [Op.like]: name ? `%${name}%` : '%',
         },
       },
+      offset: pagination?.offset,
+      limit: pagination?.pageSize,
     });
 
     return List(entities.map(this.mapDBModelToDomainModel));

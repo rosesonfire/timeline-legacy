@@ -5,10 +5,18 @@ export interface DM {
   name: string;
 }
 
+export interface Pagination {
+  offset?: number;
+  pageSize?: number;
+}
+
 export interface IRepository<T extends DM> {
   find(id: T['id']): Promise<RecordOf<T> | null>;
   create(domainModel: RecordOf<T>): Promise<RecordOf<T>>;
   update(id: T['id'], domainModel: RecordOf<Partial<T>>): Promise<RecordOf<T> | null>;
   delete(id: T['id']): Promise<RecordOf<T> | null>;
-  filter(domainModel: RecordOf<Partial<T>>): Promise<List<RecordOf<T>>>;
+  filter(
+    domainModel: RecordOf<Partial<T>>,
+    pagination?: RecordOf<Pagination>,
+  ): Promise<List<RecordOf<T>>>;
 }
