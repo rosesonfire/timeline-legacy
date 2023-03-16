@@ -7,6 +7,7 @@ const config = {
   database: DB_DATABASE,
   host: DB_HOST,
   dialect: DIALECT,
+  repositoryMode: true,
   define: {
     underscored: true,
     paranoid: true,

@@ -1,0 +1,3 @@
+import EntityToEntityRelationshipController from './EntityToEntityRelationshipController';
+
+export default EntityToEntityRelationshipController;

@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import { Model } from 'sequelize-typescript';
 
 class TMModel extends Model {}
 

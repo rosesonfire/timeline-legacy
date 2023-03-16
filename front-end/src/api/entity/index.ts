@@ -4,7 +4,7 @@ import { api } from 'api/base';
 
 import { Pagination } from 'api/_shared/types';
 
-import { Entity } from './types';
+import { Entity, EntityPostFields } from './types';
 
 let prevGetEntitiesController: AbortController | null = null;
 
@@ -25,6 +25,7 @@ export const getEntities = (pagination: Pagination) => {
     );
 };
 
-export const createEntity = (entity: Omit<Entity, 'id'>) => api.post<Entity>('/entity', entity);
+export const createEntity = (entity: RecordOf<EntityPostFields>) =>
+  api.post<Entity>('/entity', entity.toJSON()).then(({ data: entity }) => Record(entity)());
 
 export const deleteAllEntities = () => api.delete<void>('/entity');

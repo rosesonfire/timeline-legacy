@@ -1,18 +1,27 @@
+import { CreationAttributes } from 'sequelize';
+import { Repository as SequelizeRepository, Model } from 'sequelize-typescript';
 import { List, RecordOf } from 'immutable';
 
 import { DM, IRepository, Pagination } from 'domainModels/types';
 
 import TMModel from './TMModel';
+import { MapDBModelToDomainModelConfig } from './types';
 
-abstract class Repository<T extends DM> implements IRepository<T> {
-  private __DBModelClass: typeof TMModel;
+abstract class Repository<
+  T extends DM,
+  ModelAttrs extends T,
+  ModelCreationAttrs extends Omit<T, 'id'>,
+  M extends Model<ModelAttrs, ModelCreationAttrs>,
+> implements IRepository<T>
+{
+  protected _respository: SequelizeRepository<M>;
 
-  constructor(DBModelClass: typeof TMModel) {
-    this.__DBModelClass = DBModelClass;
+  constructor(respository: SequelizeRepository<M>) {
+    this._respository = respository;
   }
 
   protected _findDBObject(id: T['id']) {
-    const dbObject = this.__DBModelClass.findByPk(id);
+    const dbObject = this._respository.findByPk(id);
 
     return dbObject;
   }
@@ -25,9 +34,9 @@ abstract class Repository<T extends DM> implements IRepository<T> {
     return domainModel;
   }
 
-  async create(domainModel: RecordOf<T>) {
-    const dbObjectToCreate = this.mapDomainModelToDBModel(domainModel);
-    const createdDBObject = await dbObjectToCreate.save();
+  async create(domainModel: RecordOf<Omit<T, 'id'>>) {
+    const creationAttributes = this.mapDomainModelCreationAttributes(domainModel);
+    const createdDBObject = await this._respository.create(creationAttributes);
     const newDomainModel = this.mapDBModelToDomainModel(createdDBObject);
 
     return newDomainModel;
@@ -40,7 +49,7 @@ abstract class Repository<T extends DM> implements IRepository<T> {
       return null;
     }
 
-    const dataToUpdate = this.mapDomainModelToDBModelFields(domainModel);
+    const dataToUpdate = this.mapDomainModelToDBModelFieldsForUpdate(domainModel);
     const updatedDBObject = await dbObject.update(dataToUpdate.toJSON());
     const updatedDomainModel = this.mapDBModelToDomainModel(updatedDBObject);
 
@@ -66,11 +75,18 @@ abstract class Repository<T extends DM> implements IRepository<T> {
     pagination?: RecordOf<Pagination>,
   ): Promise<List<RecordOf<T>>>;
 
-  protected abstract mapDomainModelToDBModel(domainModel: RecordOf<T>): TMModel;
-  protected abstract mapDomainModelToDBModelFields(
+  protected abstract mapDomainModelCreationAttributes(
+    domainModel: RecordOf<Omit<T, 'id'>>,
+  ): CreationAttributes<M>;
+
+  protected abstract mapDomainModelToDBModelFieldsForUpdate(
     domainModel: RecordOf<Partial<T>>,
-  ): RecordOf<Partial<T>>;
-  protected abstract mapDBModelToDomainModel(dbObject: TMModel): RecordOf<T>;
+  ): RecordOf<Partial<ModelAttrs>>;
+
+  protected abstract mapDBModelToDomainModel(
+    dbObject: TMModel,
+    config?: MapDBModelToDomainModelConfig,
+  ): RecordOf<T>;
 }
 
 export default Repository;

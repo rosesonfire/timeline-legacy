@@ -4,6 +4,7 @@
   - db
   - services
   - ioc
+  - web
 - db
   - ioc
 - services

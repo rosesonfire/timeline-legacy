@@ -8,10 +8,14 @@ import TMTable from 'db/_shared/TMTable';
 import PersonDomainModel, { Gender, IPersonRepository } from 'domainModels/Person';
 import { Pagination } from 'domainModels/types';
 
+interface PersonModelAttrs extends PersonDomainModel {}
+
+interface PersonModelCreationAttrs extends Omit<PersonModelAttrs, 'id'> {}
+
 @TMTable({
   modelName: 'person',
 })
-export class Person extends Model<PersonDomainModel> {
+export class Person extends Model<PersonModelAttrs, PersonModelCreationAttrs> {
   @Column
   name!: string;
 
@@ -19,15 +23,21 @@ export class Person extends Model<PersonDomainModel> {
   gender!: Gender;
 }
 
-export class PersonRepository extends Repository<PersonDomainModel> implements IPersonRepository {
+export class PersonRepository
+  extends Repository<PersonDomainModel, PersonModelAttrs, PersonModelCreationAttrs, Person>
+  implements IPersonRepository
+{
   constructor() {
     super(Person);
   }
 
-  async filter(personDM: RecordOf<Partial<PersonDomainModel>>, pagination?: RecordOf<Pagination>) {
-    const { name } = personDM.toJSON();
+  async filter(
+    personDomainModel: RecordOf<Partial<PersonDomainModel>>,
+    pagination?: RecordOf<Pagination>,
+  ) {
+    const { name } = personDomainModel.toJSON();
 
-    const persons = await Person.findAll({
+    const personDBObjects = await this._respository.findAll({
       where: {
         name: {
           [Op.like]: name ? `%${name}%` : '%',
@@ -37,20 +47,22 @@ export class PersonRepository extends Repository<PersonDomainModel> implements I
       limit: pagination?.pageSize,
     });
 
-    return List(persons.map(this.mapDBModelToDomainModel));
+    return List(
+      personDBObjects.map((personDBObject) => this.mapDBModelToDomainModel(personDBObject)),
+    );
   }
 
-  protected mapDomainModelToDBModel(personDM: RecordOf<PersonDomainModel>) {
-    const createdDBObject = new Person({ ...personDM.toJSON() });
-
-    return createdDBObject;
+  protected mapDomainModelCreationAttributes(personDM: RecordOf<Omit<PersonDomainModel, 'id'>>) {
+    return personDM.toJSON();
   }
 
-  protected mapDomainModelToDBModelFields(personDM: RecordOf<Partial<PersonDomainModel>>) {
-    return personDM;
+  protected mapDomainModelToDBModelFieldsForUpdate(personDM: RecordOf<Partial<PersonDomainModel>>) {
+    const { id, name, gender } = personDM.toJSON();
+
+    return Record({ id, name, gender })();
   }
 
-  protected mapDBModelToDomainModel(personDBObject: Person) {
+  mapDBModelToDomainModel(personDBObject: Person) {
     const dbModelFields = personDBObject.toJSON();
     const newPersonDM = Record<PersonDomainModel>(dbModelFields)();
 

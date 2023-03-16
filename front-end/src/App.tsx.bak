@@ -51,8 +51,6 @@ export default function App() {
 
   //   ctx.fillStyle = 'purple';
 
-  //   console.log('sdf', screenDimensions.scale);
-
   //   // ctx.fillRect(0, 0, screenDimensions.width * screenDimensions.scale, 10);
   //   ctx.fillRect(0, 0, 900, 10);
 

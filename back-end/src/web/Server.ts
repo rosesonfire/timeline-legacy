@@ -2,15 +2,21 @@ import fastify, { FastifyInstance } from 'fastify';
 
 import EntityService from 'services/EntityService';
 import PersonService from 'services/PersonService';
+import EntityToEntityRelationshipService from 'services/EntityToEntityRelationshipService';
 
 import Controller from './_shared/Controller';
 import EntityController from './EntityController';
 import PersonController from './PersonController';
+import EntityToEntityRelationshipController from './EntityToEntityRelationshipController';
 
 class Server {
   private __server: FastifyInstance;
 
-  constructor(entityService: EntityService, personService: PersonService) {
+  constructor(
+    entityService: EntityService,
+    personService: PersonService,
+    entityToEntityRelationshipService: EntityToEntityRelationshipService,
+  ) {
     this.__server = fastify();
 
     this.setMiddlewares();
@@ -18,6 +24,10 @@ class Server {
     const controllers: [string, Controller][] = [
       ['/entity', new EntityController(entityService)],
       ['/person', new PersonController(personService)],
+      [
+        '/entityToEntityRelationship',
+        new EntityToEntityRelationshipController(entityToEntityRelationshipService),
+      ],
     ];
 
     controllers.forEach(([path, controller]) => {
