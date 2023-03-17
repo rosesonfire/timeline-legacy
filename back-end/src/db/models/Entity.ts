@@ -59,17 +59,10 @@ export class EntityRepository
       },
       offset: pagination?.offset,
       limit: pagination?.pageSize,
+      include: {
+        all: true,
+      },
     });
-
-    // const dbObjects = await Entity.findAll({
-    //   where: {
-    //     name: {
-    //       [Op.like]: name ? `%${name}%` : '%',
-    //     },
-    //   },
-    //   offset: pagination?.offset,
-    //   limit: pagination?.pageSize,
-    // });
 
     return List(
       entityDBObjects.map((entityDBObject) => this.mapDBModelToDomainModel(entityDBObject)),

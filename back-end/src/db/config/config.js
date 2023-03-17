@@ -17,5 +17,5 @@ const config = {
 module.exports = {
   development: config,
   test: config,
-  production: config,
+  production: { ...config, logging: false },
 };

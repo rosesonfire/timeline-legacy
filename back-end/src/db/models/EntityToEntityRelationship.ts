@@ -5,6 +5,7 @@ import { List, Record, RecordOf } from 'immutable';
 import db from 'db';
 import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
+import { MapDBModelToDomainModelConfig } from 'db/_shared/types';
 
 import EntityToEntityRelationshipDomainModel, {
   IEntityToEntityRelationshipRepository,
@@ -41,10 +42,10 @@ export class EntityToEntityRelationship extends Model<
   relationshipWithId!: number;
 
   @BelongsTo(() => Entity, 'relationshipOfId')
-  relationshipOf!: Entity;
+  relationshipOf?: Entity;
 
   @BelongsTo(() => Entity, 'relationshipWithId')
-  relationshipWith!: Entity;
+  relationshipWith?: Entity;
 }
 
 export class EntityToEntityRelationshipRepository
@@ -80,6 +81,9 @@ export class EntityToEntityRelationshipRepository
       },
       offset: pagination?.offset,
       limit: pagination?.pageSize,
+      include: {
+        all: true,
+      },
     });
 
     return List(
@@ -92,23 +96,6 @@ export class EntityToEntityRelationshipRepository
   protected mapDomainModelCreationAttributes(
     entityToEntityRelationshipDM: RecordOf<Omit<EntityToEntityRelationshipDomainModel, 'id'>>,
   ) {
-    // console.log('sdf');
-    // const { id, name, type, relationshipOf, relationshipWith } =
-    //   entityToEntityRelationshipDM.toJSON();
-    // console.log('sdf', id, name, type);
-
-    // const dBObject = new EntityToEntityRelationship({
-    //   id,
-    //   name,
-    //   type,
-    //   relationshipOfId: relationshipOf.id,
-    //   relationshipWithId: relationshipWith.id,
-    // });
-
-    // console.log('sdf', dBObject);
-
-    // return dBObject;
-
     return entityToEntityRelationshipDM.toJSON();
   }
 
@@ -125,7 +112,12 @@ export class EntityToEntityRelationshipRepository
     })();
   }
 
-  mapDBModelToDomainModel(entityToEntityRelationshipDBObject: EntityToEntityRelationship) {
+  mapDBModelToDomainModel(
+    entityToEntityRelationshipDBObject: EntityToEntityRelationship,
+    config?: MapDBModelToDomainModelConfig,
+  ) {
+    const shouldHydrate = config?.shouldHydrate ?? true;
+
     const { id, name, type, relationshipOfId, relationshipWithId } =
       entityToEntityRelationshipDBObject.toJSON();
     const { relationshipOf, relationshipWith } = entityToEntityRelationshipDBObject;
@@ -136,8 +128,14 @@ export class EntityToEntityRelationshipRepository
       type,
       relationshipOfId,
       relationshipWithId,
-      relationshipOf: this.__entityRepository.mapDBModelToDomainModel(relationshipOf),
-      relationshipWith: this.__entityRepository.mapDBModelToDomainModel(relationshipWith),
+      relationshipOf:
+        shouldHydrate && relationshipOf
+          ? this.__entityRepository.mapDBModelToDomainModel(relationshipOf)
+          : undefined,
+      relationshipWith:
+        shouldHydrate && relationshipWith
+          ? this.__entityRepository.mapDBModelToDomainModel(relationshipWith)
+          : undefined,
     })();
 
     return newEntityToEntityRelationshipDM;

@@ -36,12 +36,18 @@ class Server {
   }
 
   setMiddlewares() {
-    this.__server.addHook<{ toJSON?: Function }>(
+    this.__server.addHook<{ toJS?: Function }>(
       'preSerialization',
       (request, reply, payload, done) => {
-        done(null, payload?.toJSON?.());
+        done(null, payload?.toJS?.());
       },
     );
+
+    this.__server.setErrorHandler((error, request, reply) => {
+      if (error) {
+        console.error(error);
+      }
+    });
   }
 
   listen({ host, port }: { host: string; port: number }) {

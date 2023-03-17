@@ -8,10 +8,13 @@ import { useHandleSave } from './hooks';
 import { Props } from './types';
 
 const RelationshipModal: FC<Props> = (props) => {
-  const { isOpen, onClose, onSave } = props;
+  const { isOpen, onClose, onSave, relationshipOf, relationshipWith } = props;
 
   const [formData, setFormData] = useState<EntityToEntityRelationshipPostFields>({
     type: '',
+    name: '',
+    relationshipOfId: relationshipOf.id,
+    relationshipWithId: relationshipWith.id,
   });
 
   const handleSave = useHandleSave(onSave, formData);

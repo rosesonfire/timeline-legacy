@@ -15,15 +15,10 @@ class EntityToEntityRelationshipController extends Controller {
   }
 
   registerRoutes(server: FastifyInstance) {
-    server.post('/', { schema: SCHEMA__ENTITY_TO_ENTITY_RELATIONSHIP__POST }, (request) => {
-      // const entityToEntityRelationship: RecordOf<EntityToEntityRelationship> =
-      //   Record<EntityToEntityRelationship>({
-      //     id:
-      //   })();
-
+    server.post('/', { schema: SCHEMA__ENTITY_TO_ENTITY_RELATIONSHIP__POST }, (request) =>
       //@ts-ignore
-      return this._entityToEntityRelationshipService.create(Record(request.body)());
-    });
+      this._entityToEntityRelationshipService.create(Record(request.body)()),
+    );
 
     server.delete('', { schema: SCHEMA__ENTITY__DELETE }, (request, reply) =>
       this._entityToEntityRelationshipService.deleteAll(),

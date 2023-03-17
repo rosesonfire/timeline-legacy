@@ -56,7 +56,7 @@ export default function App() {
         flex={1}
         safeArea
       >
-        <VStack space={5} alignItems="center">
+        <VStack space={5} alignItems="center" marginBottom={300}>
           <Fab
             renderInPortal={false}
             size="sm"
@@ -103,11 +103,15 @@ export default function App() {
         </Actionsheet>
       </Center>
 
-      <RelationshipModal
-        isOpen={isOpenRelationshipModal}
-        onClose={onCloseRelationshipModal}
-        onSave={addNewRelationship}
-      />
+      {entity1 && entity2 && (
+        <RelationshipModal
+          isOpen={isOpenRelationshipModal}
+          onClose={onCloseRelationshipModal}
+          onSave={addNewRelationship}
+          relationshipOf={entity1}
+          relationshipWith={entity2}
+        />
+      )}
     </NativeBaseProvider>
   );
 }

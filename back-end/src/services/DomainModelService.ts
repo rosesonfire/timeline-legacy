@@ -3,33 +3,33 @@ import { List, RecordOf } from 'immutable';
 import { DM, IRepository, Pagination } from 'domainModels/types';
 
 abstract class DomainModelService<T extends DM, R extends IRepository<T>> {
-  protected _db!: R;
+  protected _repository!: R;
 
-  constructor(db: R) {
-    this._db = db;
+  constructor(repository: R) {
+    this._repository = repository;
   }
 
   create(domainModel: RecordOf<Omit<T, 'id'>>): Promise<RecordOf<T>> {
-    return this._db.create(domainModel);
+    return this._repository.create(domainModel);
   }
 
   find(id: T['id']): Promise<RecordOf<T> | null> {
-    return this._db.find(id);
+    return this._repository.find(id);
   }
 
   filter(
     entity: RecordOf<Partial<T>>,
     pagination?: RecordOf<Pagination>,
   ): Promise<List<RecordOf<T>>> {
-    return this._db.filter(entity, pagination);
+    return this._repository.filter(entity, pagination);
   }
 
   update(id: T['id'], domainModel: RecordOf<Partial<T>>): Promise<RecordOf<T> | null> {
-    return this._db.update(id, domainModel);
+    return this._repository.update(id, domainModel);
   }
 
   delete(id: T['id']): Promise<RecordOf<T> | null> {
-    return this._db.delete(id);
+    return this._repository.delete(id);
   }
 }
 

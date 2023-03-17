@@ -5,6 +5,7 @@ import {
   NAME_SCHEMA,
   NULL_SCHEMA,
   PAGINATION_SCHEMA,
+  RELATED_ENTITIES_SCHEMA,
 } from 'web/_shared/constants';
 
 import { Schema } from 'web/_shared/types';
@@ -14,6 +15,8 @@ const SCHEMA__ENTITY__RESPONSE = {
   properties: {
     ...ID_SCHEMA,
     ...NAME_SCHEMA,
+    relatedEntities1: RELATED_ENTITIES_SCHEMA,
+    relatedEntities2: RELATED_ENTITIES_SCHEMA,
   },
   required: [ID, NAME],
   additionalProperties: false,

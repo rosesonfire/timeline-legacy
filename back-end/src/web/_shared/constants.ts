@@ -42,3 +42,16 @@ export const RELATIONSHIP_OF_ID_SCHEMA = {
 export const RELATIONSHIP_WITH_ID_SCHEMA = {
   [RELATIONSHIP_WITH_ID]: NUMBER_SCHEMA,
 };
+
+export const RELATED_ENTITIES_SCHEMA = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      ...ID_SCHEMA,
+      ...NAME_SCHEMA,
+    },
+    required: [ID, NAME],
+    additionalProperties: false,
+  },
+};

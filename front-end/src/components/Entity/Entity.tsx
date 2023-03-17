@@ -13,6 +13,10 @@ const Entity: FC<Props> = (props) => {
     style.backgroundColor = 'red';
   }
 
+  if (selectionState === 'RELATIONSHIP_WITH') {
+    style.backgroundColor = 'orange';
+  }
+
   if (selectionState === 'UNSELECTED') {
     style.opacity = 0.1;
   }

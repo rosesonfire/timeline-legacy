@@ -8,6 +8,8 @@ import {
   RELATIONSHIP_WITH_ID_SCHEMA,
   RELATIONSHIP_OF_ID,
   RELATIONSHIP_WITH_ID,
+  NAME_SCHEMA,
+  NAME,
 } from 'web/_shared/constants';
 
 import { Schema } from 'web/_shared/types';
@@ -26,11 +28,12 @@ export const SCHEMA__ENTITY_TO_ENTITY_RELATIONSHIP__POST: Schema = {
   body: {
     type: 'object',
     properties: {
+      ...NAME_SCHEMA,
       ...TYPE_SCHEMA,
       ...RELATIONSHIP_OF_ID_SCHEMA,
       ...RELATIONSHIP_WITH_ID_SCHEMA,
     },
-    required: [TYPE, RELATIONSHIP_OF_ID, RELATIONSHIP_WITH_ID],
+    required: [NAME, TYPE, RELATIONSHIP_OF_ID, RELATIONSHIP_WITH_ID],
     additionalProperties: false,
   },
   response: {

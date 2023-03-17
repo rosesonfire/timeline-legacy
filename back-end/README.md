@@ -1,5 +1,11 @@
 # Import DAG
 
+- common
+  - db
+  - services
+  - ioc
+  - web
+  - index.ts
 - domainModels
   - db
   - services
