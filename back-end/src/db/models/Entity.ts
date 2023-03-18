@@ -6,6 +6,7 @@ import db from 'db';
 import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
 import { MapDBModelToDomainModelConfig } from 'db/_shared/types';
+import { getFilterLogic } from 'db/_shared/helpers';
 
 import { Pagination } from 'domainModels/types';
 import EntityDomainModel, { IEntityRepository } from 'domainModels/Entity';
@@ -51,18 +52,12 @@ export class EntityRepository
   ) {
     const { name } = entityDomainModel.toJSON();
 
-    const entityDBObjects = await this._respository.findAll({
-      where: {
-        name: {
-          [Op.like]: name ? `%${name}%` : '%',
-        },
-      },
-      offset: pagination?.offset,
-      limit: pagination?.pageSize,
-      include: {
-        all: true,
-      },
-    });
+    const entityDBObjects = await this._respository.findAll(
+      getFilterLogic({
+        name,
+        pagination,
+      }),
+    );
 
     return List(
       entityDBObjects.map((entityDBObject) => this.mapDBModelToDomainModel(entityDBObject)),

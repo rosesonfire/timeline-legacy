@@ -2,11 +2,13 @@ import fastify, { FastifyInstance } from 'fastify';
 
 import EntityService from 'services/EntityService';
 import PersonService from 'services/PersonService';
+import EventService from 'services/EventService';
 import EntityToEntityRelationshipService from 'services/EntityToEntityRelationshipService';
 
 import Controller from './_shared/Controller';
 import EntityController from './EntityController';
 import PersonController from './PersonController';
+import EventController from './EventController';
 import EntityToEntityRelationshipController from './EntityToEntityRelationshipController';
 
 class Server {
@@ -15,6 +17,7 @@ class Server {
   constructor(
     entityService: EntityService,
     personService: PersonService,
+    eventService: EventService,
     entityToEntityRelationshipService: EntityToEntityRelationshipService,
   ) {
     this.__server = fastify();
@@ -24,6 +27,7 @@ class Server {
     const controllers: [string, Controller][] = [
       ['/entity', new EntityController(entityService)],
       ['/person', new PersonController(personService)],
+      ['/event', new EventController(eventService)],
       [
         '/entityToEntityRelationship',
         new EntityToEntityRelationshipController(entityToEntityRelationshipService),

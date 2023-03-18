@@ -5,6 +5,8 @@ export const NAME = 'name';
 export const TYPE = 'type';
 export const OFFSET = 'offset';
 export const PAGE_SIZE = 'pageSize';
+export const STARTED_AT = 'startedAt';
+export const ENDED_AT = 'endedAt';
 
 export const STRING_SCHEMA = {
   type: 'string',
@@ -16,6 +18,11 @@ export const NUMBER_SCHEMA = {
 
 export const NULL_SCHEMA = {
   type: 'null',
+};
+
+export const DATE_TIME_SCHEMA = {
+  type: 'string',
+  format: 'date-time',
 };
 
 export const ID_SCHEMA = {
@@ -54,4 +61,12 @@ export const RELATED_ENTITIES_SCHEMA = {
     required: [ID, NAME],
     additionalProperties: false,
   },
+};
+
+export const STARTED_AT_SCHEMA = {
+  [STARTED_AT]: DATE_TIME_SCHEMA,
+};
+
+export const ENDED_AT_SCHEMA = {
+  [STARTED_AT]: DATE_TIME_SCHEMA,
 };

@@ -4,6 +4,7 @@ import { List, Record, RecordOf } from 'immutable';
 
 import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
+import { getFilterLogic } from 'db/_shared/helpers';
 
 import PersonDomainModel, { Gender, IPersonRepository } from 'domainModels/Person';
 import { Pagination } from 'domainModels/types';
@@ -37,15 +38,12 @@ export class PersonRepository
   ) {
     const { name } = personDomainModel.toJSON();
 
-    const personDBObjects = await this._respository.findAll({
-      where: {
-        name: {
-          [Op.like]: name ? `%${name}%` : '%',
-        },
-      },
-      offset: pagination?.offset,
-      limit: pagination?.pageSize,
-    });
+    const personDBObjects = await this._respository.findAll(
+      getFilterLogic({
+        name,
+        pagination,
+      }),
+    );
 
     return List(
       personDBObjects.map((personDBObject) => this.mapDBModelToDomainModel(personDBObject)),
