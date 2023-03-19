@@ -4,12 +4,14 @@ import EntityService from 'services/EntityService';
 import PersonService from 'services/PersonService';
 import EventService from 'services/EventService';
 import EntityToEntityRelationshipService from 'services/EntityToEntityRelationshipService';
+import EventToEntityRelationshipService from 'services/EventToEntityRelationshipService';
 
 import Controller from './_shared/Controller';
 import EntityController from './EntityController';
 import PersonController from './PersonController';
 import EventController from './EventController';
 import EntityToEntityRelationshipController from './EntityToEntityRelationshipController';
+import EventToEntityRelationshipController from './EventToEntityRelationshipController';
 
 class Server {
   private __server: FastifyInstance;
@@ -19,6 +21,7 @@ class Server {
     personService: PersonService,
     eventService: EventService,
     entityToEntityRelationshipService: EntityToEntityRelationshipService,
+    eventToEntityRelationshipService: EventToEntityRelationshipService,
   ) {
     this.__server = fastify();
 
@@ -31,6 +34,10 @@ class Server {
       [
         '/entityToEntityRelationship',
         new EntityToEntityRelationshipController(entityToEntityRelationshipService),
+      ],
+      [
+        '/eventToEntityRelationship',
+        new EventToEntityRelationshipController(eventToEntityRelationshipService),
       ],
     ];
 

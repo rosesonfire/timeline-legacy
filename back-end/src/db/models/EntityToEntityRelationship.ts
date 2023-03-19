@@ -1,4 +1,3 @@
-import { Op } from 'sequelize';
 import { BelongsTo, Column, ForeignKey, Model } from 'sequelize-typescript';
 import { List, Record, RecordOf } from 'immutable';
 

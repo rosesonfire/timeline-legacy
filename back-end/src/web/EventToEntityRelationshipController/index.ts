@@ -1,0 +1,3 @@
+import EventToEntityRelationshipController from './EventToEntityRelationshipController';
+
+export default EventToEntityRelationshipController;

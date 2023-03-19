@@ -11,9 +11,13 @@ class EntityToEntityRelationshipService extends DomainModelService<
   IEntityToEntityRelationshipRepository
 > {
   async deleteAll(): Promise<void> {
-    const allEntities = await this.filter(Record({})());
+    const allEntitytoEntityRelationships = await this.filter(Record({})());
 
-    await Promise.all(allEntities.map((entity) => this.delete(entity.id)).toArray());
+    await Promise.all(
+      allEntitytoEntityRelationships
+        .map((entitytoEntityRelationship) => this.delete(entitytoEntityRelationship.id))
+        .toArray(),
+    );
   }
 }
 
