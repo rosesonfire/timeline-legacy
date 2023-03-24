@@ -10,7 +10,7 @@ import { getFilterLogic } from 'db/_shared/helpers';
 import EventToEntityRelationshipDomainModel, {
   IEventToEntityRelationshipRepository,
 } from 'domainModels/EventToEntityRelationship';
-import { Pagination } from 'domainModels/types';
+import { Pagination, Sorting } from 'domainModels/types';
 
 import { Event, EventRepository } from './Event';
 import { Entity, EntityRepository } from './Entity';
@@ -72,14 +72,17 @@ export class EventToEntityRelationshipRepository
 
   async filter(
     eventToEntityRelationshipDomainModel: RecordOf<Partial<EventToEntityRelationshipDomainModel>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<EventToEntityRelationshipDomainModel>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ) {
     const { name } = eventToEntityRelationshipDomainModel.toJSON();
 
     const eventToEntityRelationshipDBObjects = await this._respository.findAll(
       getFilterLogic({
         name,
-        pagination,
+        ...options,
       }),
     );
 

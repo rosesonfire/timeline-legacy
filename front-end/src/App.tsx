@@ -57,6 +57,18 @@ export default function App() {
         safeArea
       >
         <VStack space={5} alignItems="center" marginBottom={300}>
+          <Fab
+            renderInPortal={true}
+            size="sm"
+            color="green"
+            style={{
+              backgroundColor: 'green',
+            }}
+            onPress={addNewEvent}
+            icon={<Icon as={Feather} name="plus" />}
+            placement="top-right"
+          />
+
           {/* <Fab
             renderInPortal={false}
             size="sm"
@@ -77,6 +89,7 @@ export default function App() {
               backgroundColor: 'red',
             }}
             icon={<Icon as={Feather} name="minus" />}
+            placement="top-left"
           />
 
           {/* <FlatList
@@ -110,17 +123,6 @@ export default function App() {
           onPress={addNewEntity}
           icon={<Icon as={Feather} name="plus" />}
         /> */}
-
-        <Fab
-          renderInPortal={true}
-          size="sm"
-          color="green"
-          style={{
-            backgroundColor: 'green',
-          }}
-          onPress={addNewEvent}
-          icon={<Icon as={Feather} name="plus" />}
-        />
 
         <Actionsheet isOpen={isOpenActionSheet} onClose={onCloseActionSheet}>
           <Actionsheet.Content>

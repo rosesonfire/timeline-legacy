@@ -1,12 +1,13 @@
 import { Record } from 'immutable';
 import { FastifyInstance } from 'fastify';
 
+import EventToEntityRelationship from 'domainModels/EventToEntityRelationship';
 import EventToEntityRelationshipService from 'services/EventToEntityRelationshipService';
 import Controller from 'web/_shared/Controller';
 
 import { SCHEMA__EVENT_TO_ENTITY_RELATIONSHIP__POST, SCHEMA__ENTITY__DELETE } from './constants';
 
-class EventToEntityRelationshipController extends Controller {
+class EventToEntityRelationshipController extends Controller<EventToEntityRelationship> {
   private readonly _eventToEntityRelationshipService: EventToEntityRelationshipService;
 
   constructor(eventToEntityRelationshipService: EventToEntityRelationshipService) {

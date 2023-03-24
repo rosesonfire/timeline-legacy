@@ -6,7 +6,7 @@ import EventService from 'services/EventService';
 import EntityToEntityRelationshipService from 'services/EntityToEntityRelationshipService';
 import EventToEntityRelationshipService from 'services/EventToEntityRelationshipService';
 
-import Controller from './_shared/Controller';
+import { IController } from './_shared/Controller';
 import EntityController from './EntityController';
 import PersonController from './PersonController';
 import EventController from './EventController';
@@ -27,7 +27,7 @@ class Server {
 
     this.setMiddlewares();
 
-    const controllers: [string, Controller][] = [
+    const controllers: [string, IController][] = [
       ['/entity', new EntityController(entityService)],
       ['/person', new PersonController(personService)],
       ['/event', new EventController(eventService)],
@@ -73,7 +73,7 @@ class Server {
     });
   }
 
-  private __registerRoutes(path: string, controller: Controller) {
+  private __registerRoutes(path: string, controller: IController) {
     this.__server.register(
       (instance, opts, done) => {
         controller.registerRoutes(instance);

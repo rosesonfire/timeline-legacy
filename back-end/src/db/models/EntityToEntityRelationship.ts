@@ -10,7 +10,7 @@ import { getFilterLogic } from 'db/_shared/helpers';
 import EntityToEntityRelationshipDomainModel, {
   IEntityToEntityRelationshipRepository,
 } from 'domainModels/EntityToEntityRelationship';
-import { Pagination } from 'domainModels/types';
+import { Pagination, Sorting } from 'domainModels/types';
 
 import { Entity, EntityRepository } from './Entity';
 
@@ -69,14 +69,17 @@ export class EntityToEntityRelationshipRepository
 
   async filter(
     entityToEntityRelationshipDomainModel: RecordOf<Partial<EntityToEntityRelationshipDomainModel>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<EntityToEntityRelationshipDomainModel>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ) {
     const { name } = entityToEntityRelationshipDomainModel.toJSON();
 
     const entityToEntityRelationshipDBObjects = await this._respository.findAll(
       getFilterLogic({
         name,
-        pagination,
+        ...options,
       }),
     );
 

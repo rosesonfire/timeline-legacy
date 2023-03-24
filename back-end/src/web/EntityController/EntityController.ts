@@ -1,6 +1,7 @@
 import { Record } from 'immutable';
 import { FastifyInstance } from 'fastify';
 
+import Entity from 'domainModels/Entity';
 import EntityService from 'services/EntityService';
 import Controller from 'web/_shared/Controller';
 
@@ -12,7 +13,7 @@ import {
   SCHEMA__ENTITY__PATCH,
 } from './constants';
 
-class EntityController extends Controller {
+class EntityController extends Controller<Entity> {
   private readonly _entityService: EntityService;
 
   constructor(entityService: EntityService) {
@@ -29,10 +30,9 @@ class EntityController extends Controller {
     );
 
     server.get('/', { schema: SCHEMA__ENTITY__SEARCH }, (request) => {
-      const { pagination, rest } = this.extractPaginationFromQueryParams(request);
+      const { data, ...options } = this.extractPaginationAndSortingFromQueryParams(request);
 
-      //@ts-ignore
-      return this._entityService.filter(Record(rest)(), Record(pagination)());
+      return this._entityService.filter(data, options);
     });
 
     server.get('/:id', { schema: SCHEMA__ENTITY__GET }, async (request, reply) => {

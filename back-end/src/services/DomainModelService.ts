@@ -1,6 +1,6 @@
 import { List, RecordOf } from 'immutable';
 
-import { DM, IRepository, Pagination } from 'domainModels/types';
+import { DM, IRepository, Pagination, Sorting } from 'domainModels/types';
 
 abstract class DomainModelService<T extends DM, R extends IRepository<T>> {
   protected _repository!: R;
@@ -19,9 +19,12 @@ abstract class DomainModelService<T extends DM, R extends IRepository<T>> {
 
   filter(
     entity: RecordOf<Partial<T>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<T>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ): Promise<List<RecordOf<T>>> {
-    return this._repository.filter(entity, pagination);
+    return this._repository.filter(entity, options);
   }
 
   update(id: T['id'], domainModel: RecordOf<Partial<T>>): Promise<RecordOf<T> | null> {

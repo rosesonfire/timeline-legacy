@@ -8,7 +8,7 @@ import TMTable from 'db/_shared/TMTable';
 import { MapDBModelToDomainModelConfig } from 'db/_shared/types';
 import { getFilterLogic } from 'db/_shared/helpers';
 
-import { Pagination } from 'domainModels/types';
+import { Pagination, Sorting } from 'domainModels/types';
 import EntityDomainModel, { IEntityRepository } from 'domainModels/Entity';
 
 import { EntityToEntityRelationship } from './EntityToEntityRelationship';
@@ -48,14 +48,17 @@ export class EntityRepository
 
   async filter(
     entityDomainModel: RecordOf<Partial<EntityDomainModel>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<EntityDomainModel>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ) {
     const { name } = entityDomainModel.toJSON();
 
     const entityDBObjects = await this._respository.findAll(
       getFilterLogic({
         name,
-        pagination,
+        ...options,
       }),
     );
 

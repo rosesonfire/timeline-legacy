@@ -1,6 +1,7 @@
 import { Record } from 'immutable';
 import { FastifyInstance } from 'fastify';
 
+import Person from 'domainModels/Person';
 import PersonService from 'services/PersonService';
 import Controller from 'web/_shared/Controller';
 
@@ -12,7 +13,7 @@ import {
   SCHEMA__PERSON__PATCH,
 } from './constants';
 
-class PersonController extends Controller {
+class PersonController extends Controller<Person> {
   private readonly _personService: PersonService;
 
   constructor(personService: PersonService) {
@@ -28,10 +29,11 @@ class PersonController extends Controller {
       (request) => this._personService.create(Record(request.body)()),
     );
 
-    server.get('/', { schema: SCHEMA__PERSON__SEARCH }, (request) =>
-      //@ts-ignore
-      this._personService.filter(Record(request.query)()),
-    );
+    server.get('/', { schema: SCHEMA__PERSON__SEARCH }, (request) => {
+      const { data, ...options } = this.extractPaginationAndSortingFromQueryParams(request);
+
+      return this._personService.filter(data, options);
+    });
 
     server.get('/:id', { schema: SCHEMA__PERSON__GET }, async (request, reply) => {
       //@ts-ignore

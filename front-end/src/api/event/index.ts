@@ -4,11 +4,11 @@ import { api } from 'api/base';
 
 import { Pagination } from 'api/_shared/types';
 
-import { Event, EventPostFields, ImmutableEvent } from './types';
+import { Event, EventSorting, EventPostFields, EventResponse, ImmutableEvent } from './types';
 
 let prevGetEventsController: AbortController | null = null;
 
-export const getEvents = (pagination: Pagination) => {
+export const getEvents = (sorting: EventSorting, pagination: Pagination) => {
   prevGetEventsController?.abort();
 
   const getEventsController = new AbortController();
@@ -16,12 +16,23 @@ export const getEvents = (pagination: Pagination) => {
   prevGetEventsController = getEventsController;
 
   return api
-    .get<Event[]>('/event', {
-      params: pagination,
+    .get<EventResponse[]>('/event', {
+      params: {
+        ...sorting,
+        ...pagination,
+      },
       signal: getEventsController.signal,
     })
     .then(({ data: events }) => {
-      return List<RecordOf<ImmutableEvent>>(events.map((event) => Record(event)()));
+      return List<RecordOf<ImmutableEvent>>(
+        events.map((event) =>
+          Record({
+            ...event,
+            startedAt: new Date(event.startedAt),
+            endedAt: event.endedAt ? new Date(event.endedAt) : undefined,
+          })(),
+        ),
+      );
     });
 };
 

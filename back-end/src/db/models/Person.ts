@@ -1,4 +1,3 @@
-import { Op } from 'sequelize';
 import { Column, Model } from 'sequelize-typescript';
 import { List, Record, RecordOf } from 'immutable';
 
@@ -7,7 +6,7 @@ import TMTable from 'db/_shared/TMTable';
 import { getFilterLogic } from 'db/_shared/helpers';
 
 import PersonDomainModel, { Gender, IPersonRepository } from 'domainModels/Person';
-import { Pagination } from 'domainModels/types';
+import { Pagination, Sorting } from 'domainModels/types';
 
 interface PersonModelAttrs extends PersonDomainModel {}
 
@@ -34,14 +33,17 @@ export class PersonRepository
 
   async filter(
     personDomainModel: RecordOf<Partial<PersonDomainModel>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<PersonDomainModel>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ) {
     const { name } = personDomainModel.toJSON();
 
     const personDBObjects = await this._respository.findAll(
       getFilterLogic({
         name,
-        pagination,
+        ...options,
       }),
     );
 

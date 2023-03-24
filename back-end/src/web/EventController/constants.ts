@@ -6,6 +6,7 @@ import {
   NAME_SCHEMA,
   NULL_SCHEMA,
   PAGINATION_SCHEMA,
+  SORTING_SCHEMA,
   STARTED_AT,
   STARTED_AT_SCHEMA,
 } from 'web/_shared/constants';
@@ -69,6 +70,8 @@ export const SCHEMA__EVENT__SEARCH: Schema = {
     properties: {
       ...NAME_SCHEMA,
       ...PAGINATION_SCHEMA,
+      ...STARTED_AT_SCHEMA,
+      ...SORTING_SCHEMA([STARTED_AT]),
     },
     additionalProperties: false,
   },

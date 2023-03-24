@@ -1,13 +1,22 @@
 import { List, RecordOf } from 'immutable';
 
+import { KeyOf } from 'common/types/type';
+
 export interface DM {
   id: number;
   name: string;
 }
 
+export type SortOrder = 'DESC' | 'ASC';
+
 export interface Pagination {
-  offset?: number;
-  pageSize?: number;
+  offset: number;
+  pageSize: number;
+}
+
+export interface Sorting<T extends DM> {
+  sortBy: KeyOf<T>;
+  order: SortOrder;
 }
 
 export interface IRepository<T extends DM> {
@@ -17,6 +26,9 @@ export interface IRepository<T extends DM> {
   delete(id: T['id']): Promise<RecordOf<T> | null>;
   filter(
     domainModel: RecordOf<Partial<T>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<T>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ): Promise<List<RecordOf<T>>>;
 }

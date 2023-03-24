@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { List, Record, RecordOf } from 'immutable';
 import { ListRenderItem } from 'react-native';
+import { faker } from '@faker-js/faker';
 
 import EntityRow from 'components/EntityRow';
 import EventRow from 'components/EventRow';
@@ -81,15 +82,17 @@ export const useEvents = () => {
   const getMoreEvents = useCallback(() => {
     setIsFetching(true);
 
-    getEvents({ offset, pageSize: DEFAULT_PAGE_SIZE }).then((moreEvents) => {
-      const newOffset = offset + moreEvents.size;
+    getEvents({ sortBy: 'startedAt', order: 'ASC' }, { offset, pageSize: DEFAULT_PAGE_SIZE }).then(
+      (moreEvents) => {
+        const newOffset = offset + moreEvents.size;
 
-      setIsFetching(false);
-      setOffset(newOffset);
-      setEvents(events.concat(moreEvents));
+        setIsFetching(false);
+        setOffset(newOffset);
+        setEvents(offset === 0 ? moreEvents : events.concat(moreEvents));
 
-      return moreEvents;
-    });
+        return moreEvents;
+      },
+    );
   }, [offset, events]);
 
   useEffect(() => {
@@ -97,22 +100,26 @@ export const useEvents = () => {
   }, []);
 
   const addNewEvent = useCallback(async () => {
+    // const startedAt = new Date();
+    const startedAt = faker.date.between('1600-01-01T00:00:00.000Z', '2023-01-01T00:00:00.000Z');
+
     await createEvent(
       Record({
         name: 'some name',
-        startedAt: new Date(),
+        startedAt,
       })(),
     );
 
-    getMoreEvents();
-  }, [getMoreEvents]);
+    setOffset(0);
+    setTimeout(getMoreEvents);
+  }, [setOffset, getMoreEvents]);
 
   const removeAllEvents = useCallback(async () => {
     await deleteAllEvents();
 
     setOffset(0);
     getMoreEvents();
-  }, []);
+  }, [getMoreEvents]);
 
   return useMemo(
     () => ({

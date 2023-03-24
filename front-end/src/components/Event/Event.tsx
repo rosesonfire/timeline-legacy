@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import { Button } from 'native-base';
+import moment from 'moment';
 
 import { Props } from './types';
 
@@ -23,7 +24,7 @@ const Event: FC<Props> = (props) => {
 
   return (
     <Button marginTop="-3" marginBottom="-3" style={style}>
-      {event.id} {event.name}
+      {event.id} {event.name} {moment(event.startedAt).format('YYYY')} {event.endedAt}
     </Button>
   );
 };

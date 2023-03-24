@@ -7,7 +7,7 @@ import Repository from 'db/_shared/Repository';
 import TMTable from 'db/_shared/TMTable';
 import { getFilterLogic } from 'db/_shared/helpers';
 
-import { Pagination } from 'domainModels/types';
+import { Pagination, Sorting } from 'domainModels/types';
 import EventDomainModel, { IEventRepository } from 'domainModels/Event';
 
 interface EventModelAttrs extends EventDomainModel {}
@@ -40,14 +40,17 @@ export class EventRepository
 
   async filter(
     eventDomainModel: RecordOf<Partial<EventDomainModel>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<EventDomainModel>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ) {
     const { name } = eventDomainModel.toJSON();
 
     const eventDBObjects = await this._respository.findAll(
       getFilterLogic({
         name,
-        pagination,
+        ...options,
       }),
     );
 

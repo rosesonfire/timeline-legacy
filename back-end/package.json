@@ -7,6 +7,7 @@
     "migration:generate": "yarn env-cmd -f .env sequelize-cli migration:generate --name $1",
     "db:migrate": "yarn env-cmd -f .env sequelize-cli db:migrate",
     "start:docker": "yarn db:migrate && yarn start",
+    "check:types": "yarn tsc -p ./tsconfig.json",
     "test": "jest",
     "test:watch": "jest --watch"
   },

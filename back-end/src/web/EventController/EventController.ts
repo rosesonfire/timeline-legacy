@@ -1,6 +1,7 @@
 import { Record } from 'immutable';
 import { FastifyInstance } from 'fastify';
 
+import Event from 'domainModels/Event';
 import EventService from 'services/EventService';
 import Controller from 'web/_shared/Controller';
 
@@ -12,7 +13,7 @@ import {
   SCHEMA__EVENT__PATCH,
 } from './constants';
 
-class EventController extends Controller {
+class EventController extends Controller<Event> {
   private readonly _eventService: EventService;
 
   constructor(eventService: EventService) {
@@ -29,10 +30,9 @@ class EventController extends Controller {
     );
 
     server.get('/', { schema: SCHEMA__EVENT__SEARCH }, (request) => {
-      const { pagination, rest } = this.extractPaginationFromQueryParams(request);
+      const { data, ...options } = this.extractPaginationAndSortingFromQueryParams(request);
 
-      //@ts-ignore
-      return this._eventService.filter(Record(rest)(), Record(pagination)());
+      return this._eventService.filter(data, options);
     });
 
     server.get('/:id', { schema: SCHEMA__EVENT__GET }, async (request, reply) => {

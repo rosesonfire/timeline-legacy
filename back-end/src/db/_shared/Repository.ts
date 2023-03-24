@@ -2,9 +2,8 @@ import { CreationAttributes } from 'sequelize';
 import { Repository as SequelizeRepository, Model } from 'sequelize-typescript';
 import { List, RecordOf } from 'immutable';
 
-import { DM, IRepository, Pagination } from 'domainModels/types';
+import { DM, IRepository, Pagination, Sorting } from 'domainModels/types';
 
-import TMModel from './TMModel';
 import { MapDBModelToDomainModelConfig } from './types';
 
 abstract class Repository<
@@ -72,7 +71,10 @@ abstract class Repository<
 
   abstract filter(
     domainModel: RecordOf<Partial<T>>,
-    pagination?: RecordOf<Pagination>,
+    options?: {
+      sorting?: RecordOf<Sorting<T>>;
+      pagination?: RecordOf<Pagination>;
+    },
   ): Promise<List<RecordOf<T>>>;
 
   protected abstract mapDomainModelCreationAttributes(
@@ -84,7 +86,7 @@ abstract class Repository<
   ): RecordOf<Partial<ModelAttrs>>;
 
   protected abstract mapDBModelToDomainModel(
-    dbObject: TMModel,
+    dbObject: Model,
     config?: MapDBModelToDomainModelConfig,
   ): RecordOf<T>;
 }

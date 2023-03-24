@@ -1,12 +1,13 @@
 import { Record } from 'immutable';
 import { FastifyInstance } from 'fastify';
 
+import EntityToEntityRelationship from 'domainModels/EntityToEntityRelationship';
 import EntityToEntityRelationshipService from 'services/EntityToEntityRelationshipService';
 import Controller from 'web/_shared/Controller';
 
 import { SCHEMA__ENTITY_TO_ENTITY_RELATIONSHIP__POST, SCHEMA__ENTITY__DELETE } from './constants';
 
-class EntityToEntityRelationshipController extends Controller {
+class EntityToEntityRelationshipController extends Controller<EntityToEntityRelationship> {
   private readonly _entityToEntityRelationshipService: EntityToEntityRelationshipService;
 
   constructor(entityToEntityRelationshipService: EntityToEntityRelationshipService) {

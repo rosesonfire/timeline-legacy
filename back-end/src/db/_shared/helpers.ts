@@ -1,14 +1,24 @@
-import { Op } from 'sequelize';
-import { Pagination } from 'domainModels/types';
+import { Op, FindOptions, Attributes, Model } from 'sequelize';
+import { RecordOf } from 'immutable';
 
-export const getFilterLogic = ({
+import { DM, Pagination, Sorting } from 'domainModels/types';
+
+export const getFilterLogic = <
+  T extends DM,
+  ModelAttrs extends T,
+  ModelCreationAttrs extends Omit<T, 'id'>,
+  M extends Model<ModelAttrs, ModelCreationAttrs>,
+>({
   name,
+  sorting,
   pagination,
 }: {
   name?: string;
-  pagination?: Pagination;
-}) => {
+  sorting?: RecordOf<Sorting<T>>;
+  pagination?: RecordOf<Pagination>;
+}): FindOptions<Attributes<M>> => {
   return {
+    //@ts-ignore
     where: {
       name: {
         [Op.like]: name ? `%${name}%` : '%',
@@ -16,6 +26,7 @@ export const getFilterLogic = ({
     },
     offset: pagination?.offset,
     limit: pagination?.pageSize,
+    order: sorting ? [[sorting.sortBy, sorting.order]] : undefined,
     include: {
       all: true,
     } as {
