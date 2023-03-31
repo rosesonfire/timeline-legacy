@@ -6,6 +6,6 @@ import { EventRelationshipSelectionState } from 'components/_shared/types';
 export interface Props {
   event: RecordOf<ImmutableEvent>;
   index: number;
-  // onPress: () => void;
+  onPress: () => void;
   selectionState: EventRelationshipSelectionState;
 }

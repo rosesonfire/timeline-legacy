@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { PressableProps } from 'react-native';
 
-import { EntityToEntityRelationshipPostFields } from 'api/relationship/types';
+import { EntityToEntityRelationshipPostFields } from 'api/entityToEntityRelationship/types';
 
 import { Props } from './types';
 

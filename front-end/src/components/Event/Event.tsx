@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Props } from './types';
 
 const Event: FC<Props> = (props) => {
-  const { event, selectionState } = props;
+  const { event, selectionState, onPress } = props;
 
   const style: StyleProp<ViewStyle> = {};
 
@@ -23,7 +23,7 @@ const Event: FC<Props> = (props) => {
   }
 
   return (
-    <Button marginTop="-3" marginBottom="-3" style={style}>
+    <Button marginTop="-3" marginBottom="-3" style={style} onPress={onPress}>
       {event.id} {event.name} {moment(event.startedAt).format('YYYY')} {event.endedAt}
     </Button>
   );

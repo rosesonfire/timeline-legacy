@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Button, FormControl, Input, Modal } from 'native-base';
 
-import { EntityToEntityRelationshipPostFields } from 'api/relationship/types';
+import { EntityToEntityRelationshipPostFields } from 'api/entityToEntityRelationship/types';
 
 import { useHandleSave } from './hooks';
 

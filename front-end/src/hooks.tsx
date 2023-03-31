@@ -8,10 +8,10 @@ import EventRow from 'components/EventRow';
 
 import { createEntity, deleteAllEntities, getEntities } from 'api/entity';
 import { createEvent, deleteAllEvents, getEvents } from 'api/event';
-import { createEntityToEntityRelationship } from 'api/relationship';
+import { createEntityToEntityRelationship } from 'api/entityToEntityRelationship';
 import { ImmutableEntity } from 'api/entity/types';
 import { ImmutableEvent } from 'api/event/types';
-import { EntityToEntityRelationshipPostFields } from 'api/relationship/types';
+import { EntityToEntityRelationshipPostFields } from 'api/entityToEntityRelationship/types';
 
 import {
   EntityRelationshipSelectionState,
@@ -88,7 +88,7 @@ export const useEvents = () => {
 
         setIsFetching(false);
         setOffset(newOffset);
-        setEvents(offset === 0 ? moreEvents : events.concat(moreEvents));
+        setEvents(events.concat(moreEvents));
 
         return moreEvents;
       },
@@ -100,7 +100,6 @@ export const useEvents = () => {
   }, []);
 
   const addNewEvent = useCallback(async () => {
-    // const startedAt = new Date();
     const startedAt = faker.date.between('1600-01-01T00:00:00.000Z', '2023-01-01T00:00:00.000Z');
 
     await createEvent(
@@ -110,9 +109,17 @@ export const useEvents = () => {
       })(),
     );
 
-    setOffset(0);
-    setTimeout(getMoreEvents);
-  }, [setOffset, getMoreEvents]);
+    setIsFetching(true);
+
+    const newEvents = await getEvents(
+      { sortBy: 'startedAt', order: 'ASC' },
+      { offset: 0, pageSize: offset + 1 + DEFAULT_PAGE_SIZE },
+    );
+
+    setIsFetching(false);
+    setOffset(offset + 1);
+    setEvents(newEvents);
+  }, [offset]);
 
   const removeAllEvents = useCallback(async () => {
     await deleteAllEvents();
@@ -168,6 +175,40 @@ export const useRelationship = () => {
   );
 };
 
+export const useEventToEntityRelationship = () => {
+  const [event, setEvent] = useState<RecordOf<ImmutableEvent>>();
+  const [entity, setEntity] = useState<RecordOf<ImmutableEntity>>();
+
+  const onPressEvent = useCallback(
+    (pressedEvent: RecordOf<ImmutableEvent>) => () => {
+      if (pressedEvent.id === event?.id) {
+        setEvent(undefined);
+        setEntity(undefined);
+      } else {
+        setEvent(pressedEvent);
+      }
+    },
+    [event],
+  );
+
+  const addNewEventToEntityRelationship = useCallback(
+    (formData: EntityToEntityRelationshipPostFields) => {
+      createEntityToEntityRelationship(Record(formData)());
+    },
+    [],
+  );
+
+  return useMemo(
+    () => ({
+      event,
+      entity,
+      onPressEvent,
+      addNewEventToEntityRelationship,
+    }),
+    [event, entity, addNewEventToEntityRelationship],
+  );
+};
+
 export const useRenderEntity = (
   onPress: (entity: RecordOf<ImmutableEntity>) => () => void,
   selectedEntity1?: RecordOf<ImmutableEntity>,
@@ -206,7 +247,7 @@ export const useRenderEntity = (
   );
 };
 
-export const useRenderEvent = () =>
+export const useRenderEvent = (onPress: (entity: RecordOf<ImmutableEvent>) => () => void) =>
   // onPress: (event: RecordOf<ImmutableEvent>) => () => void,
   // selectedEvent1?: RecordOf<ImmutableEvent>,
   // selectedEvent2?: RecordOf<ImmutableEvent>,
@@ -238,7 +279,7 @@ export const useRenderEvent = () =>
             selectionState={selectionState}
             event={event}
             index={index}
-            // onPress={onPress(event)}
+            onPress={onPress(event)}
           />
         );
       },

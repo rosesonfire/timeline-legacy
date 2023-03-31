@@ -6,7 +6,7 @@ import Event from 'components/Event/Event';
 import { Props } from './types';
 
 const EventRow: FC<Props> = (props) => {
-  const { event, index, selectionState } = props;
+  const { event, index, selectionState, onPress } = props;
   const isEven = index % 2 === 0;
 
   return (
@@ -16,7 +16,7 @@ const EventRow: FC<Props> = (props) => {
       justifyContent={isEven ? 'flex-end' : 'flex-start'}
       width={259.5}
     >
-      {!isEven && <Event selectionState={selectionState} event={event} />}
+      {!isEven && <Event selectionState={selectionState} event={event} onPress={onPress} />}
 
       {
         <>
@@ -46,7 +46,7 @@ const EventRow: FC<Props> = (props) => {
         </>
       }
 
-      {isEven && <Event selectionState={selectionState} event={event} />}
+      {isEven && <Event selectionState={selectionState} event={event} onPress={onPress} />}
     </Flex>
   );
 };

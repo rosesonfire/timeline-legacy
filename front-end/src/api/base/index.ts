@@ -15,6 +15,6 @@ api.interceptors.response.use(
       console.error(error.response?.data);
     }
 
-    return error;
+    throw error;
   },
 );

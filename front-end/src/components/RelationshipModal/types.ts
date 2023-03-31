@@ -1,7 +1,7 @@
 import { RecordOf } from 'immutable';
 
 import { ImmutableEntity } from 'api/entity/types';
-import { EntityToEntityRelationshipPostFields } from 'api/relationship/types';
+import { EntityToEntityRelationshipPostFields } from 'api/entityToEntityRelationship/types';
 
 export interface Props {
   isOpen: boolean;
